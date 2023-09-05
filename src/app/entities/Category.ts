@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ICategory } from "../interfaces/ICategory";
 
-@Entity("categories")
+@Entity("cateogry")
 export class Category {
 
     @PrimaryGeneratedColumn("increment")
