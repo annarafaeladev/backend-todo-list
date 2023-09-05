@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import "reflect-metadata"
 import { DataSource } from "typeorm"
-import { CreateTarefasTable1693922022359 } from './migrations/1693922022359-CreateTarefasTable';
+import { CreateCategoriesTable1693922022359 } from './migrations/1693922022359-CreateCategoriesTable';
 import { Category } from '../app/entities/Category';
 
 const port = process.env.DB_PORT as number | undefined
@@ -16,6 +16,6 @@ export const AppDataSource = new DataSource({
     synchronize: true,
     logging: false,
     entities: [Category],
-    migrations: [CreateTarefasTable1693922022359],
+    migrations: [CreateCategoriesTable1693922022359],
     subscribers: [],
 })
