@@ -1,0 +1,8 @@
+{
+  "PROPERTIES_INVALID": "Propriedade(s) inválida(s).",
+  "USER_NOT_FOUND": "Usuário não encontrado",
+  "USER_ERROR_REGISTER": "Error ao tentar cadastrar usuario",
+  "CATEGORY_NOT_FOUND": "Categoria não encontrada",
+  "CATEGORY_ERROR_REGISTER": "Error ao tentar criar categoria",
+  "CATEGORY_ERROR_FIND_ALL": "Ocorreu um erro ao buscar as categorias"
+}
