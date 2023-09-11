@@ -1,80 +1,49 @@
-import { Request, Response, Router } from "express";
-import { categoryRepository } from "../repositories/CategoryRepository";
-import { ICategory } from "../interfaces/ICategory";
-import { Category } from "../entities/Category";
-import { BadRequestError, CustomError, NotFoundError } from "../helpers/CutomError";
+import { Request, Response } from "express";
+import { ICategory, ICategoryRequest, ICategoryUpdateRequest } from "../interfaces/ICategory";
+import { BadRequestError } from "../helpers/CutomError";
+import CategoryService from "../services/CategoryService";
+import error from "../constants/errors.json";
 
+class CategoryController {
 
-const categoryController = Router();
+    async create(req: Request, res: Response): Promise<Response> {
+        const body: ICategoryRequest = req.body;
 
-categoryController.get('/', async (_req: Request, res: Response): Promise<Response> => {
-    const categories = await categoryRepository.find();
+        if (!body.title)
+            throw new BadRequestError(error.PROPERTIES_INVALID);
 
-    return res.status(200).json(categories);
+        const category: ICategory | null = await CategoryService.create(body);
 
-});
+        return res.status(201).json(category);
+    }
 
-categoryController.post('/', async (req: Request, res: Response): Promise<Response> => {
-    const { titulo }: ICategory = req.body;
+    async getCategories(_req: Request, res: Response): Promise<Response> {
+        const categories = await CategoryService.find();
 
-    console.log(titulo, titulo.length)
+        return res.status(200).json(categories);
+    }
 
-    if (!titulo)
-        throw new BadRequestError("Titulo não definido");
+    async update(req: Request, res: Response): Promise<Response> {
+        const body: ICategoryUpdateRequest = req.body;
 
-    const newCategory: ICategory = categoryRepository.create({
-        titulo
-    });
+        if (body.id == null || !body.title)
+            throw new BadRequestError(error.PROPERTIES_INVALID);
 
-    await categoryRepository.save(newCategory);
+        const category: ICategory = await CategoryService.update(body);
 
-    return res.status(201).send();
+        return res.status(200).json(category);
+    }
 
-});
+    async delete(req: Request, res: Response): Promise<Response> {
+        const { id } = req.params;
 
-categoryController.patch('/', async (req: Request, res: Response): Promise<Response> => {
-    const { titulo, id }: ICategory = req.body;
+        if (id == null)
+            throw new BadRequestError(error.PROPERTIES_INVALID);
 
-    if (id == null)
-        throw new BadRequestError("Id invalido");
+        await CategoryService.delete(Number(id))
 
-    if (!titulo)
-        throw new BadRequestError("Titulo não definido");
+        return res.status(204).send();
+    }
+}
 
-    const category: ICategory | null = await categoryRepository.findOneBy({
-        id: Number(id)
-    });
-
-    if (category == null)
-        throw new NotFoundError("Categoria não encontrada.");
-
-    category.titulo = titulo
-
-    await categoryRepository.save(category);
-
-    return res.status(200).json(category);
-
-});
-
-
-categoryController.delete('/:id', async (req: Request, res: Response): Promise<Response> => {
-    const { id } = req.params;
-
-    if (id == null)
-        throw new BadRequestError("Não foi possivel deletar categoria, id inválido");
-
-
-    const category: ICategory | null = await categoryRepository.findOneBy({
-        id: Number(id)
-    });
-
-    if (category == null)
-        throw new CustomError("Não foi possivel deletar, categoria não encontrada.", 404);
-
-    await categoryRepository.delete({ id: category.id });
-
-    return res.status(204).send();
-
-});
-
-export { categoryController }
+export default new CategoryController(); 
