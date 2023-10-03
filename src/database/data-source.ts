@@ -15,7 +15,7 @@ import { CreateSubTasksTable1694009727789 } from './migrations/1694009727789-Cre
 const port = process.env.DB_PORT as number | undefined
 
 export const AppDataSource = new DataSource({
-    type: "mysql",
+    type: "postgres",
     host: process.env.DB_HOST,
     port: port,
     username: process.env.DB_USERNAME,
