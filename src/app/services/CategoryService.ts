@@ -1,4 +1,4 @@
-import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/CutomError";
+import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/api-errors";
 import { ICategory, ICategoryRequest, ICategoryUpdateRequest } from "../interfaces/ICategory";
 import { categoryRepository } from "../repositories/CategoryRepository";
 import error from "../constants/errors.json";

@@ -9,8 +9,12 @@ export class CustomError extends Error {
 }
 
 export class BadRequestError extends CustomError {
-    constructor(message: string) {
-        super(message, 400)
+
+    constructor(message: string, field?: string | null) {
+        if (field)
+            super(message.replace('{field}', field), 400);
+        else
+            super(message, 400);
     }
 }
 

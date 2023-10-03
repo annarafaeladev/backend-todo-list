@@ -1,4 +1,4 @@
-import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/CutomError";
+import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/api-errors";
 import { ITaskCreateRequest, ITask, ITaskUpdateRequest } from "../interfaces/ITask";
 import { taskRepository } from "../repositories/TaskRepository";
 import error from "../constants/errors.json";
@@ -31,6 +31,19 @@ class TaskService {
             throw new InternalServerError(error.USER_NOT_FOUND);
 
         return tasks;
+    }
+
+    async findById(id: number) {
+        const task: ITask | null = await taskRepository.findOne({
+            where: {
+                id
+            }
+        });
+
+        if (task == null)
+            throw new InternalServerError("cateogria nao encontrada");
+
+        return task;
     }
 
     async update(req: ITaskUpdateRequest): Promise<ITask> {

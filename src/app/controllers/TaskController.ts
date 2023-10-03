@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BadRequestError } from "../helpers/CutomError";
+import { BadRequestError } from "../helpers/api-errors";
 import { ITask, ITaskUpdateRequest, ITaskCreateRequest } from "../interfaces/ITask";
 import error from "../constants/errors.json";
 import TaskService from "../services/TaskService";
@@ -24,7 +24,7 @@ class TaskController {
     async update(req: Request, res: Response): Promise<Response> {
         const body: ITaskUpdateRequest = req.body;
 
-        if (body.id == null)
+        if (!body.id || isNaN(Number(body.id)))
             throw new BadRequestError(error.PROPERTIES_INVALID);
 
         const category: ITask = await TaskService.update(body);
@@ -35,12 +35,23 @@ class TaskController {
     async delete(req: Request, res: Response): Promise<Response> {
         const { id } = req.params;
 
-        if (id == null)
+        if (!id || isNaN(Number(id)))
             throw new BadRequestError(error.PROPERTIES_INVALID);
 
         await TaskService.delete(Number(id))
 
         return res.status(204).send();
+    }
+
+    async findById(req: Request, res: Response): Promise<Response> {
+        const { id } = req.params;
+
+        if (!id || isNaN(Number(id)))
+            throw new BadRequestError(error.PROPERTIES_INVALID);
+
+        const task: ITask = await TaskService.findById(Number(id))
+
+        return res.status(200).json(task);
     }
 }
 

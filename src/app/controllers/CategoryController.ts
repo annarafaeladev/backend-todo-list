@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { ICategory, ICategoryRequest, ICategoryUpdateRequest } from "../interfaces/ICategory";
-import { BadRequestError } from "../helpers/CutomError";
+import { BadRequestError } from "../helpers/api-errors";
 import CategoryService from "../services/CategoryService";
 import error from "../constants/errors.json";
 
@@ -26,7 +26,7 @@ class CategoryController {
     async update(req: Request, res: Response): Promise<Response> {
         const body: ICategoryUpdateRequest = req.body;
 
-        if (body.id == null || !body.title)
+        if (!body.id || isNaN(Number(body.id)) || !body.title)
             throw new BadRequestError(error.PROPERTIES_INVALID);
 
         const category: ICategory = await CategoryService.update(body);
@@ -37,7 +37,7 @@ class CategoryController {
     async delete(req: Request, res: Response): Promise<Response> {
         const { id } = req.params;
 
-        if (id == null)
+        if (!id || isNaN(Number(id)))
             throw new BadRequestError(error.PROPERTIES_INVALID);
 
         await CategoryService.delete(Number(id))
