@@ -24,7 +24,7 @@ export class Task {
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @OneToMany(() => SubTask, (subtask) => subtask.task, { cascade: true })
+    @OneToMany(() => SubTask, (subtask) => subtask.task, { eager: true, cascade: true })
     subtasks: SubTask[];
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })

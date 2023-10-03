@@ -7,11 +7,14 @@ export class User {
     @PrimaryGeneratedColumn("increment")
     id: number;
 
-    @Column({ type: 'varchar', length: 50, nullable: false })
+    @Column({ type: 'varchar', length: 50, nullable: false, unique: true })
     username: string;
 
     @Column({ type: 'varchar', length: 255, nullable: false })
     password: string;
+
+    @Column({ type: 'varchar', length: 255, nullable: false })
+    name: string;
 
     @OneToMany(() => Task, task => task.user)
     task: Task[]
