@@ -35,6 +35,6 @@
     "migration:create": "yarn typeorm migration:create"
   },
   "engines": {
-    "node": "16"
+    "node": "16.16.0"
   }
 }
