@@ -7,6 +7,10 @@ import error from "../constants/errors.json";
 
 class UserController {
 
+    async status(req: Request, res: Response): Promise<Response> {
+        return res.status(201).send("Api is runnning...");
+    }
+
     async create(req: Request, res: Response): Promise<Response> {
         const body: IUserRequest = req.body;
 
