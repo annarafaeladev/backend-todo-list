@@ -31,8 +31,8 @@
     "start": "node ./src/dist/server.js",
     "dev:server": "ts-node-dev src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
-    "migration:run": "yarn typeorm -d src/database/data-source.ts migration:run",
-    "migration:create": "yarn typeorm migration:create"
+    "migration:run": "ts-node-dev ./node_modules/typeorm/cli.js -d src/database/data-source.ts migration:run",
+    "migration:create": "ts-node-dev ./node_modules/typeorm/cli.js migration:create"
   },
   "engines": {
     "node": "16.16.0"

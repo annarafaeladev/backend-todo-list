@@ -4,7 +4,7 @@ import { authMiddleware } from '../middleware/authMiddleware';
 
 const usersRouter = Router();
 
-usersRouter.post('/api', UserController.status);
+usersRouter.get('/users/api', UserController.status);
 usersRouter.post('/users', UserController.create);
 usersRouter.post('/login', UserController.login);
 
