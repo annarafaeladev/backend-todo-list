@@ -8,9 +8,10 @@ export class CreateSubTasksTable1694009727789 implements MigrationInterface {
             columns: [
                 {
                     name: "id",
-                    type: "int",
+                    type: "integer",
                     isPrimary: true,
-                    generationStrategy: "increment"
+                    isGenerated: true,
+                    generationStrategy: 'increment'
                 },
                 {
                     name: "task_id",

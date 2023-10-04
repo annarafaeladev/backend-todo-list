@@ -8,9 +8,10 @@ export class CreateTasksTable1693951636255 implements MigrationInterface {
             columns: [
                 {
                     name: "id",
-                    type: "int",
+                    type: "integer",
                     isPrimary: true,
-                    generationStrategy: "increment"
+                    isGenerated: true,
+                    generationStrategy: 'increment'
                 },
                 {
                     name: "user_id",

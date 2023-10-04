@@ -9,9 +9,10 @@ export class CreateCategoriesTable1693922022359 implements MigrationInterface {
                 columns: [
                     {
                         name: "id",
-                        type: "int",
+                        type: "integer",
                         isPrimary: true,
-                        generationStrategy: "increment"
+                        isGenerated: true,
+                        generationStrategy: 'increment'
                     },
                     {
                         name: "title",
