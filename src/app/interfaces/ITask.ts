@@ -1,3 +1,4 @@
+import { Category } from "../entities/Category"
 import { SubTask } from "../entities/SubTask"
 import { User } from "../entities/User"
 
@@ -9,6 +10,7 @@ export interface ITask {
     severity: number,
     subtasks: SubTask[],
     user: User,
+    category: Category,
     updated_at: Date
     created_at: Date
 }
@@ -16,7 +18,7 @@ export interface ITask {
 export interface ITaskCreateRequest {
     title: string,
     description: string,
-    userId: number
+    categoryId: number
 }
 
 

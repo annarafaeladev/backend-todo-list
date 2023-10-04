@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./User";
 import { SubTask } from "./SubTask";
+import { Category } from "./Category";
 
 @Entity("tasks")
 export class Task {
@@ -23,6 +24,10 @@ export class Task {
     @ManyToOne(() => User, user => user.task, { eager: true })
     @JoinColumn({ name: 'user_id' })
     user: User;
+
+    @ManyToOne(() => Category, category => category.task, { eager: true })
+    @JoinColumn({ name: 'category_id' })
+    category: Category;
 
     @OneToMany(() => SubTask, (subtask) => subtask.task, { eager: true, cascade: true })
     subtasks: SubTask[];

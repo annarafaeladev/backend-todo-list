@@ -2,18 +2,31 @@ import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/
 import { ITaskCreateRequest, ITask, ITaskUpdateRequest } from "../interfaces/ITask";
 import { taskRepository } from "../repositories/TaskRepository";
 import error from "../constants/errors.json";
-import UserService from "./UserService";
+import { IUser, IUserDTO } from "../interfaces/IUser";
+import { categoryRepository } from "../repositories/CategoryRepository";
+import { ICategory } from "../interfaces/ICategory";
+import { userRepository } from "../repositories/UserRepository";
 
 class TaskService {
 
-    async create(req: ITaskCreateRequest): Promise<ITask | null> {
-        const user = await UserService.find(req.userId);
+    async create(body: ITaskCreateRequest, user: Partial<IUserDTO>): Promise<ITask | null> {
+        const category: ICategory | null = await categoryRepository.findOne({
+            where: {
+                id: body.categoryId
+            }
+        });
+
+        if (category == null) {
+            throw new BadRequestError("Category not found");
+        }
+
         const task: ITask = taskRepository.create({
-            title: req.title,
-            description: req.description,
+            title: body.title,
+            description: body.description,
             severity: 1,
             done: false,
-            user
+            user,
+            category
         });
 
         const newTask: ITask = await taskRepository.save(task);
@@ -24,8 +37,12 @@ class TaskService {
         return newTask;
     }
 
-    async find() {
-        const tasks: ITask[] | null = await taskRepository.find();
+    async find(userDto: Partial<IUser>) {
+        const tasks: ITask[] | null = await taskRepository.find({
+            where: {
+                user: { id: userDto.id }
+            }
+        });
 
         if (tasks == null)
             throw new InternalServerError(error.USER_NOT_FOUND);

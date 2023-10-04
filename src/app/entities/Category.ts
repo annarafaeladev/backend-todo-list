@@ -1,5 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ICategory } from "../interfaces/ICategory";
+import { Task } from "./Task";
 
 @Entity("categories")
 export class Category {
@@ -15,4 +16,7 @@ export class Category {
 
     @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
     updated_at: Date;
+
+    @OneToMany(() => Task, task => task.user)
+    task: Task[]
 }

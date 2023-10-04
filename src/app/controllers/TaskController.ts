@@ -10,13 +10,13 @@ class TaskController {
     async create(req: Request, res: Response): Promise<Response> {
         const body: ITaskCreateRequest = req.body;
 
-        const category: ITask | null = await TaskService.create(body);
+        const category: ITask | null = await TaskService.create(body, req.user);
 
         return res.status(201).json(category);
     }
 
     async find(req: Request, res: Response): Promise<Response> {
-        const user = await TaskService.find();
+        const user = await TaskService.find(req.user);
 
         return res.status(200).json(user);
     }
