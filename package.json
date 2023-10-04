@@ -29,7 +29,7 @@
   "scripts": {
     "build": "rm -rf ./dist && tsc",
     "production": "node ./dist/server.js",
-    "start": "rm -rf ./dist && tsc && node ./dist/server.js",
+    "start": "node ./dist/server.js",
     "dev:server": "ts-node-dev src/server.ts",
     "typeorm": "ts-node-dev ./node_modules/typeorm/cli.js",
     "migration:run": "ts-node-dev node_modules/typeorm/cli.js -d src/database/data-source.ts migration:run",
