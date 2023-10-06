@@ -1,13 +1,22 @@
 import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/api-errors";
-import { ICategory, ICategoryRequest, ICategoryUpdateRequest } from "../interfaces/ICategory";
+import { ICategory, ICategoryRequest, ICategoryDTO } from "../interfaces/ICategory";
 import { categoryRepository } from "../repositories/CategoryRepository";
 import error from "../constants/errors.json";
+import { IUserDTO } from "../interfaces/IUser";
 
 class CategoryService {
 
-    async create(req: ICategoryRequest): Promise<ICategory | null> {
+    getCategoryDto(category: ICategory): ICategoryDTO {
+        return {
+            id: category.id,
+            title: category.title
+        }
+    }
+
+    async create(req: ICategoryRequest, user: Partial<IUserDTO>): Promise<ICategoryDTO | null> {
         const newCategory: ICategory = categoryRepository.create({
-            title: req.title
+            title: req.title,
+            user
         });
 
         const category: ICategory = await categoryRepository.save(newCategory);
@@ -15,11 +24,17 @@ class CategoryService {
         if (category == null)
             throw new BadRequestError(error.CATEGORY_ERROR_REGISTER);
 
-        return category;
+
+        return this.getCategoryDto(category);
     }
 
-    async find() {
-        const categories: ICategory[] | undefined = await categoryRepository.find();
+    async find(user: Partial<IUserDTO>): Promise<ICategoryDTO[]> {
+        const categories: ICategoryDTO[] | undefined = await categoryRepository.find({
+            where: {
+                user: { id: user.id }
+            },
+            select: ["id", "title"]
+        });
 
         if (categories == undefined)
             throw new InternalServerError(error.CATEGORY_ERROR_FIND_ALL);
@@ -27,9 +42,10 @@ class CategoryService {
         return categories;
     }
 
-    async update(req: ICategoryUpdateRequest): Promise<ICategory> {
+    async update(req: ICategoryDTO, user: Partial<IUserDTO>): Promise<ICategoryDTO> {
         const category: ICategory | null = await categoryRepository.findOneBy({
-            id: Number(req.id)
+            user: { id: user.id },
+            id: req.id,
         });
 
         if (category == null)
@@ -37,7 +53,9 @@ class CategoryService {
 
         category.title = req.title
 
-        return await categoryRepository.save(category);
+        await categoryRepository.save(category);
+
+        return this.getCategoryDto(category);
     }
 
     async delete(id: number) {

@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Task } from "./Task";
+import { Category } from "./Category";
 
 @Entity("users")
 export class User {
@@ -18,6 +19,9 @@ export class User {
 
     @OneToMany(() => Task, task => task.user)
     task: Task[]
+
+    @OneToMany(() => Category, category => category.user)
+    categories: Category[]
 
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     created_at: Date;

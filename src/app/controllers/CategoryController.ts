@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ICategory, ICategoryRequest, ICategoryUpdateRequest } from "../interfaces/ICategory";
+import { ICategory, ICategoryRequest, ICategoryDTO } from "../interfaces/ICategory";
 import { BadRequestError } from "../helpers/api-errors";
 import CategoryService from "../services/CategoryService";
 import error from "../constants/errors.json";
@@ -12,24 +12,24 @@ class CategoryController {
         if (!body.title)
             throw new BadRequestError(error.PROPERTIES_INVALID);
 
-        const category: ICategory | null = await CategoryService.create(body);
+        const category: ICategoryDTO | null = await CategoryService.create(body, req.user);
 
         return res.status(201).json(category);
     }
 
-    async getCategories(_req: Request, res: Response): Promise<Response> {
-        const categories = await CategoryService.find();
+    async getCategories(req: Request, res: Response): Promise<Response> {
+        const categories = await CategoryService.find(req.user);
 
         return res.status(200).json(categories);
     }
 
     async update(req: Request, res: Response): Promise<Response> {
-        const body: ICategoryUpdateRequest = req.body;
+        const body: ICategoryDTO = req.body;
 
         if (!body.id || isNaN(Number(body.id)) || !body.title)
             throw new BadRequestError(error.PROPERTIES_INVALID);
 
-        const category: ICategory = await CategoryService.update(body);
+        const category: ICategoryDTO = await CategoryService.update(body, req.user);
 
         return res.status(200).json(category);
     }
