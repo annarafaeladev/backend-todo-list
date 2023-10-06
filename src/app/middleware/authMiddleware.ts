@@ -21,20 +21,23 @@ export const authMiddleware = async (
         throw new UnauthorizedError('Não autorizado')
     }
 
-    const token = authorization.split(' ')[1]
+    try {
+        const token = authorization.split(' ')[1]
+        const { id } = jwt.verify(token, `${process.env.JWT_PASS}` ?? '') as JwtPayload
 
-    console.log("TESTE 2", process.env.JWT_SECRET)
-    const { id } = jwt.verify(token, `${process.env.JWT_PASS}` ?? '') as JwtPayload
+        const user = await userRepository.findOneBy({ id })
 
-    const user = await userRepository.findOneBy({ id })
+        if (!user) {
+            throw new UnauthorizedError('Não autorizado')
+        }
 
-    if (!user) {
-        throw new UnauthorizedError('Não autorizado')
+        const { password, ...userResponse } = user
+
+        req.user = userResponse
+    } catch (error) {
+        console.log("ERROR: Token Expirado")
+        throw new UnauthorizedError('Não autorizado');
     }
-
-    const { password, ...userResponse } = user
-
-    req.user = userResponse
 
     next()
 }
