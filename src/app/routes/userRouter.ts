@@ -3,8 +3,6 @@ import UserController from '../controllers/UserController';
 import { authMiddleware } from '../middleware/authMiddleware';
 
 const usersRouter = Router();
-
-usersRouter.get('/users/api', UserController.status);
 usersRouter.post('/users', UserController.create);
 usersRouter.post('/login', UserController.login);
 
