@@ -75,38 +75,10 @@ export class CreateTasksTable1693951636255 implements MigrationInterface {
         }));
 
 
-        // await queryRunner.query(
-        //     `CREATE TABLE tarefa (
-        //         id int NOT NULL, 
-        //         titulo varchar(100) NOT NULL, 
-        //         descricao varchar(255) NULL,
-        //         concluida boolean NOT NULL DEFAULT false,
-        //         updated_at timestamp NOT NULL DEFAULT now(),
-        //         created_at timestamp NOT NULL DEFAULT now(),
-        //         usuario_id int NOT NULL, 
-        //         PRIMARY KEY (id),
-        //         FOREIGN KEY (usuario_id) REFERENCES usuario(id)
-        //     )`
-        // );
-        // await queryRunner.query(`
-        //     CREATE TABLE tarefa_subtarefa (
-        //         id INT NOT NULL,
-        //         tarefa_id INT NOT NULL,
-        //         subtarefa_id INT NOT NULL,
-        //         updated_at timestamp NOT NULL DEFAULT now(),
-        //         created_at timestamp NOT NULL DEFAULT now(),
-        //         PRIMARY KEY (id),
-        //         FOREIGN KEY (tarefa_id) REFERENCES tarefa(id),
-        //         FOREIGN KEY (subtarefa_id) REFERENCES tarefa(id)
-        //     )`
-        // );
-
-
     }
 
 
     public async down(queryRunner: QueryRunner): Promise<void> {
-        // await queryRunner.dropTable('tarefa_subtarefa');
         await queryRunner.dropForeignKey("tasks", "user_id")
         await queryRunner.dropForeignKey("tasks", "category_id")
         await queryRunner.dropTable('tasks');
