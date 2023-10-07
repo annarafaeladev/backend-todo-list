@@ -15,10 +15,19 @@ export interface ITask {
     created_at: Date
 }
 
+export interface INewTask {
+    title: string,
+    description: string,
+    done: boolean,
+    severity: number,
+    user: User,
+    category?: Category
+}
+
 export interface ITaskCreateRequest {
     title: string,
     description: string,
-    categoryId: number
+    categoryId?: number
 }
 
 
@@ -30,3 +39,14 @@ export interface ITaskUpdateRequest {
     severity: number,
 }
 
+export interface ITaskDto {
+    id: number
+    title: string,
+    description: string,
+    done: boolean,
+    severity: number,
+    subtasks: SubTask[],
+    category: Category,
+    updated_at: Date
+    created_at: Date
+}

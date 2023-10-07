@@ -21,11 +21,11 @@ export class Task {
     @Column({ default: 1, nullable: false })
     severity: number
 
-    @ManyToOne(() => User, user => user.task, { eager: true })
+    @ManyToOne(() => User, user => user.task, { eager: false })
     @JoinColumn({ name: 'user_id' })
     user: User;
 
-    @ManyToOne(() => Category, category => category.task, { eager: true })
+    @ManyToOne(() => Category, category => category.task, { eager: true, nullable: true })
     @JoinColumn({ name: 'category_id' })
     category: Category;
 

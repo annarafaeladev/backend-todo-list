@@ -1,44 +1,64 @@
 import { BadRequestError, InternalServerError, NotFoundError } from "../helpers/api-errors";
-import { ITaskCreateRequest, ITask, ITaskUpdateRequest } from "../interfaces/ITask";
+import { ITaskCreateRequest, ITask, ITaskUpdateRequest, INewTask, ITaskDto } from "../interfaces/ITask";
 import { taskRepository } from "../repositories/TaskRepository";
 import error from "../constants/errors.json";
 import { IUser, IUserDTO } from "../interfaces/IUser";
 import { categoryRepository } from "../repositories/CategoryRepository";
-import { ICategory } from "../interfaces/ICategory";
 import { userRepository } from "../repositories/UserRepository";
+import { Category } from "../entities/Category";
+import { User } from "../entities/User";
+import { Task } from "../entities/Task";
 
 class TaskService {
 
-    async create(body: ITaskCreateRequest, user: Partial<IUserDTO>): Promise<ITask | null> {
-        const category: ICategory | null = await categoryRepository.findOne({
-            where: {
-                id: body.categoryId
-            }
+
+    async create(body: ITaskCreateRequest, { id }: Partial<IUserDTO>): Promise<ITaskDto | null> {
+        if (!body.title)
+            throw new BadRequestError("Property title invalid");
+
+        const user: User | null = await userRepository.findOneBy({
+            id
         });
 
-        if (category == null) {
-            throw new BadRequestError("Category not found");
-        }
+        if (user == null)
+            throw new InternalServerError(error.USER_NOT_FOUND);
 
-        const task: ITask = taskRepository.create({
+        const taskEntity: INewTask = {
             title: body.title,
             description: body.description,
             severity: 1,
             done: false,
-            user,
-            category
-        });
+            user
+        }
 
-        const newTask: ITask = await taskRepository.save(task);
+
+        if (body.categoryId) {
+            const category: Category | null = await categoryRepository.findOne({
+                where: {
+                    id: body.categoryId
+                }
+            });
+
+            if (category == null) {
+                throw new BadRequestError("Category not found");
+            }
+
+            taskEntity.category = category;
+        }
+
+        const task: Task = taskRepository.create(taskEntity);
+
+        const newTask: Task = await taskRepository.save(task);
 
         if (newTask == null)
             throw new BadRequestError(error.USER_ERROR_REGISTER);
 
-        return newTask;
+        const { user: userTask, ...properties } = newTask
+        return properties;
     }
 
     async find(userDto: Partial<IUser>) {
-        const tasks: ITask[] | null = await taskRepository.find({
+        const tasks: Task[] | null = await taskRepository.find({
             where: {
                 user: { id: userDto.id }
             }

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { BadRequestError } from "../helpers/api-errors";
-import { ITask, ITaskUpdateRequest, ITaskCreateRequest } from "../interfaces/ITask";
+import { ITask, ITaskUpdateRequest, ITaskCreateRequest, ITaskDto } from "../interfaces/ITask";
 import error from "../constants/errors.json";
 import TaskService from "../services/TaskService";
 
@@ -10,7 +10,7 @@ class TaskController {
     async create(req: Request, res: Response): Promise<Response> {
         const body: ITaskCreateRequest = req.body;
 
-        const category: ITask | null = await TaskService.create(body, req.user);
+        const category: ITaskDto | null = await TaskService.create(body, req.user);
 
         return res.status(201).json(category);
     }
